@@ -10,5 +10,10 @@
   
       <cfreturn response>
     </cffunction>
+
+    <cffunction name="orderStatus" restpath="orderStatus" access="remote" returntype="struct" httpmethod="GET" produces="application/json">
+      <cfset response = orderDao.getOrderStatus(URL.orderId)>  
+      <cfreturn response>
+    </cffunction>
   
   </cfcomponent>
