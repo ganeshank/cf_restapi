@@ -114,5 +114,31 @@
         return( LOCAL.QueryArray );
       </cfscript>
     </cffunction> 
+
+    <cffunction  name="getFile" access="public" output="false" hint="Get student data" returntype="struct">
+      <cfargument name="orderId" required="true" type="string" />
+      <cfset local.response = {}>
+
+      <cfquery datasource="#application.datasource#" name="getFile">
+        SELECT order_count FROM orders where order_id = 
+        <cfqueryparam value="#arguments.orderId#" cfSqlType="CF_SQL_VARCHAR">
+      </cfquery>
+
+      <cfif getFile.recordcount GT 0> 
+         <cfif (getFile.order_count % 2) eq 0>
+          <cfset local.response["success"] = true>
+          <cfset local.response["message"] = "">
+          <cffile  action="readbinary" file="C:\ColdFusion2018\cfusion\wwwroot\cf_restapi\abc.pdf" variable="getFile" />
+          <cfset local.file = toBinary(ToBase64(toString(getFile)))>
+          <cfset local.pdfFile = binaryEncode(local.file, "Base64")>          
+          <cfset local.response["pdfFile"] = local.pdfFile>
+         <cfelse>
+          <cfset local.response["success"] = false>
+          <cfset local.response["message"] = "file not found">
+         </cfif>       
+        
+      </cfif>
+      <cfreturn local.response>
+    </cffunction>
   
   </cfcomponent>

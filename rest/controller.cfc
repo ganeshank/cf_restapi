@@ -55,5 +55,18 @@
       </cfif>      
       <cfreturn local.loginObj>
   </cffunction>
+
+  <cffunction  name="getFile" restpath="getFile" access="remote" returntype="struct" httpmethod="GET" produces="application/json">
+    <cfset local.verifyAuth = authDao.authenticate()>
+    <cfset local.response = {}>
+    <cfif local.verifyAuth.success>
+      <cfset response = orderDao.getFile(URL.orderId)>  
+    <cfelse>
+      <cfset local.response["success"] = false>
+      <cfset local.response["message"] = "Authentication is failed"> 
+    </cfif>
+
+    <cfreturn local.response>
+  </cffunction>
   
 </cfcomponent>
