@@ -4,9 +4,15 @@
 	<cfscript>
 		this.Name="api";
 	</cfscript>
+    <cfset this.restsetting = {
+        cflocation :"./",
+        skipcfcerror:true
+    }>
+    <cfset this.mappings = structNew()>
+    <cfset this.mappings["/cfc"] = expandPath("/cf_restapi/rest/cfc")>
     
 	<cffunction name="onApplicationStart">
-        <cfset application.datasource = "restapi">
+        <cfset application.datasource = "local">
         <cfset application.jwtKey = "%ng@dkdbW">
         <cfset restInitApplication(getDirectoryFromPath(getCurrentTemplatePath()) & 'rest',"controller")>
         <cfreturn true>
