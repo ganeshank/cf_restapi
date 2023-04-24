@@ -7,6 +7,7 @@
     
 	<cffunction name="onApplicationStart">
         <cfset application.datasource = "restapi">
+        <cfset application.jwtKey = "%ng@dkdbW">
         <cfset restInitApplication(getDirectoryFromPath(getCurrentTemplatePath()) & 'rest',"controller")>
         <cfreturn true>
     </cffunction>

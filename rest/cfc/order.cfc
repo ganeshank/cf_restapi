@@ -53,7 +53,7 @@
         }>
         <cfset resObj["success"] = true>
         <cfset resObj["data"] = local.orderStatusObj>
-        <cfset resObj["message"] = "Order is created successfully!!!"> 
+        <cfset resObj["message"] = "Order found"> 
       <cfelse>
         <cfset resObj["success"] = false>
         <cfset resObj["message"] = "Order id is not exist"> 
@@ -61,5 +61,58 @@
            
       <cfreturn resObj>
     </cffunction>
+
+    <cffunction name="getStudentData" access="public" output="false" hint="Get student data" returntype="struct">
+      <cfargument  name="limit" type="any" required="true">
+      <cfargument  name="offset" type="any" required="true">
+
+      <cfset local.response = {}>
+      <cfquery name="studentCount" datasource="#application.datasource#" >
+          SELECT count(*) AS total FROM student 
+      </cfquery>
+
+      <cfquery name="getStudent" datasource="#application.datasource#" >
+          SELECT * FROM student 
+          order by id 
+          OFFSET #arguments.offset# ROWS
+          FETCH NEXT #arguments.limit# ROWS ONLY
+      </cfquery>
+      
+      <cfset local.response.count = studentCount.total>
+      <cfset local.response.items = getStudent>
+      <cfreturn local.response>
+    </cffunction>
+
+    <cffunction name="QueryToArray" access="public" returntype="array" output="false"
+      hint="This turns a query into an array of structures.">
+
+      <!--- Define arguments. --->
+      <cfargument name="Data" type="query" required="yes" />
+
+      <cfscript>
+        // Define the local scope.
+        var LOCAL = StructNew();
+        // Get the column names as an array.
+        LOCAL.Columns = ListToArray( ARGUMENTS.Data.ColumnList );
+        // Create an array that will hold the query equivalent.
+        LOCAL.QueryArray = ArrayNew( 1 );
+        // Loop over the query.
+        for (LOCAL.RowIndex = 1 ; LOCAL.RowIndex LTE ARGUMENTS.Data.RecordCount ; LOCAL.RowIndex = (LOCAL.RowIndex + 1)){
+          // Create a row structure.
+          LOCAL.Row = StructNew();
+          // Loop over the columns in this row.
+          for (LOCAL.ColumnIndex = 1 ; LOCAL.ColumnIndex LTE ArrayLen( LOCAL.Columns ) ; LOCAL.ColumnIndex = (LOCAL.ColumnIndex + 1)){
+            // Get a reference to the query column.
+            LOCAL.ColumnName = LOCAL.Columns[ LOCAL.ColumnIndex ];
+            // Store the query cell value into the struct by key.
+            LOCAL.Row[ LOCAL.ColumnName ] = ARGUMENTS.Data[ LOCAL.ColumnName ][ LOCAL.RowIndex ];
+          }
+          // Add the structure to the query array.
+          ArrayAppend( LOCAL.QueryArray, LOCAL.Row );
+        }
+        // Return the array equivalent.
+        return( LOCAL.QueryArray );
+      </cfscript>
+    </cffunction> 
   
   </cfcomponent>
