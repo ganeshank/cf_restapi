@@ -1,14 +1,11 @@
-
-<cfcomponent hint="Auth specific services" displayname="order"> 
-  
-    <cffunction name="authenticate" returntype="any"> 
+<cfcomponent hint="Auth specific services" displayname="AuthService">>
+    <cffunction name="authenticate" returntype="struct"> 
         <cfset local.response = {}>
         <cfset local.requestData = GetHttpRequestData()>
-        <cfif StructKeyExists( local.requestData.Headers, "authorization" )>
+        <cfif StructKeyExists( local.requestData.Headers, "Authorization" )>
             <cfset local.token = GetHttpRequestData().Headers.authorization>
             <cftry>
-            <cfset jwt = new cfc.jwt(Application.jwtkey)>
-            <cfset local.result = jwt.decode(local.token)>
+            <cfset local.result = application.jwtServices.decode(local.token)>
             <cfset local.response["success"] = true>
             <cfcatch type="Any">
                 <cfset local.response["success"] = false>
