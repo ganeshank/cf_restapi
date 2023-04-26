@@ -44,8 +44,8 @@
     <cffunction  name="getFile" access="public" output="false" hint="create order" returntype="query">
         <cfargument name="orderId" required="true" type="string" />
         <cfquery datasource="#application.datasource#" name="local.getFile">
-            SELECT order_count FROM orders where order_id = 
-            <cfqueryparam value="#arguments.orderId#" cfSqlType="CF_SQL_VARCHAR">
+            SELECT * FROM orders where external_order_id = 
+        <cfqueryparam value="#arguments.orderId#" cfSqlType="CF_SQL_VARCHAR">
         </cfquery>
         <cfreturn local.getFile>
     </cffunction>
