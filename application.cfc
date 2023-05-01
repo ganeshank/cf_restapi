@@ -11,11 +11,11 @@
 		restPath = "/api"
     }>
     <cfset this.mappings = structNew()>
-    <cfset this.mappings["/services"] = expandPath("/cf_restapi/restApi/services")>
-    <cfset this.mappings["/models"] = expandPath("/cf_restapi/restApi/model")>
+    <cfset this.mappings["/services"] = expandPath("/restApi/services")>
+    <cfset this.mappings["/models"] = expandPath("/restApi/model")>
     
 	<cffunction name="onApplicationStart">
-        <cfset application.datasource = "local">
+        <cfset application.datasource = "DSNFleet">
         <cfset application.jwtKey = "%ng@dkdbW">
         <cfset restInitApplication(getDirectoryFromPath(getCurrentTemplatePath())&'restApi/controller', 'api')>
         <cfinclude  template="appverse.cfm">

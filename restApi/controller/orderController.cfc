@@ -31,7 +31,7 @@
         <cfset local.verifyAuth =application.authServices.authenticate()>
         <cfset local.response = {}>
         <cfif local.verifyAuth.success>
-          <cfset response = application.orderServices.getFile(URL.orderId)>  
+          <cfset response = application.orderServices.getFile(URL.externalId)>  
         <cfelse>
           <cfset local.response["success"] = false>
           <cfset local.response["message"] = "Authentication is failed"> 

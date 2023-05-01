@@ -5,10 +5,9 @@
       
       <cfset var resObj = {}>
       <cfset local.result = application.orderDao.createOrder(arguments.orderDetail)>
-        <cfif structKeyExists(local.result, 'orderId')>
+        <cfif structKeyExists(local.result, 'orderNumber')>
           <cfset resObj["success"] = true>
           <cfset resObj["orderNumber"] = local.result.orderNumber>
-          <cfset resObj["orderId"] = local.result.orderId>
           <cfset resObj["message"] = "Order is created successfully!!!">           
         <cfelse>
           <cfset resObj["success"] = false>
@@ -28,7 +27,8 @@
         <cfset local.orderStatusObj = {
           "orderId": arguments.orderId,
           "orderStatusId": local.orderStatus.id,
-          "orderStatusName": local.orderStatus.title
+          "orderStatusName": local.orderStatus.title,
+          "orderNumber": local.orderStatus.order_number
         }>
         <cfset resObj["success"] = true>
         <cfset resObj["data"] = local.orderStatusObj>
@@ -66,16 +66,22 @@
       <cfargument name="orderId" required="true" type="string" />
 
       <cfset local.response = {}>      
-      <cfset local.directoryPath = expandPath('./restApi')&'/pdf'>
+      <cfset local.directoryPath = expandPath('../../restApi')&'/pdf'>
       <cfset local.getFile = application.orderDao.getFile(arguments.orderId)>
       <cfif getFile.recordcount GT 0> 
         <cfif (val(arguments.orderId) % 2) eq 0>
-          <cffile  action="readbinary" file="#local.directoryPath#/abc.pdf" variable="getFile" />
-         <cfset local.file = toBinary(ToBase64(toString(getFile)))>
-         <cfset local.pdfFile = binaryEncode(local.file, "Base64")>
-         <cfset local.response["success"] = true>
-         <cfset local.response["message"] = "">          
-         <cfset local.response["pdfFile"] = local.pdfFile>
+          <cftry>
+            <cffile  action="readbinary" file="#local.directoryPath#/abc.pdf" variable="getFile" />
+            <cfset local.file = toBinary(ToBase64(toString(getFile)))>
+            <cfset local.pdfFile = binaryEncode(local.file, "Base64")>
+            <cfset local.response["success"] = true>
+            <cfset local.response["message"] = "">          
+            <cfset local.response["pdfFile"] = local.pdfFile>
+          <cfcatch>
+            <cfset local.response["success"] = false>
+            <cfset local.response["message"] = cfcatch.message>
+          </cfcatch>
+          </cftry>
         <cfelse>
          <cfset local.response["success"] = false>
          <cfset local.response["message"] = "file not found!">

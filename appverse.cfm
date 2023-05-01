@@ -8,4 +8,4 @@
 
 <!--- Model/Database related cfc's here --->
 
-<cfset application.orderDao = new models.orderDao(application.datasource)>
+<cfset application.orderDao = new models.orderDao(application.datasource)> 
